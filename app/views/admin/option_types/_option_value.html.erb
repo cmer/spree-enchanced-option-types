@@ -1,4 +1,10 @@
-<% signed_amount = (option_value.amount.to_i > 0 ? "+" : "") + option_value.amount.to_s %>
+<% 
+  signed_amount = if option_value.respond_to?(:amount)
+    (option_value.amount.to_i > 0 ? "+" : "") + option_value.amount.to_s
+  else
+    ""
+  end
+%>
 <tr class="option_value">
   <td><%= f.text_field :name %></td>
   <td><%= f.text_field :presentation %></td>
