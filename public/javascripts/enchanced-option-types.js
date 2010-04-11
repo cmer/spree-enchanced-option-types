@@ -89,3 +89,24 @@ $('#product-variants select.option-type').bind("change", function(){
 
   variant_changed(ov_to_variant[selected_values]);
 })
+
+// add a hidden variants_{variants_id} field to the form to facilitate interaction with
+// other extensions that expect such a field for quantity.
+$('#cart-form form').bind("submit", function() {
+  auto_generated_field_class = "auto-generated-extra-variant";
+  selected_ov = [];
+  $.each($('div.option-type-wrapper select'), function(index, control) {
+    selected_ov.push(control.value);
+  });
+  
+  variant_id = ov_to_variant[selected_ov.join(",")];
+
+  // clean up previously auto-generated hidden fields, just in case
+  $.each($("#cart-form form input." + auto_generated_field_class), function(index, control) {
+    control.remove();
+  });
+
+  // add a new auto-generated hidden quantity field for our variant.
+  $("#cart-form form").append("<input type='hidden' id='variants_" + variant_id + "' name='variants[" + variant_id + "]' class='" + auto_generated_field_class + "' value='" + $("#quantity")[0].value + "' />")
+  return true;
+})
